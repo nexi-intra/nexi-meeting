@@ -13,9 +13,9 @@ RUN go install github.com/koksmat-com/koksmat@v2.1.6.20
 RUN koksmat context init sharepoint
 WORKDIR /kitchens
 COPY ./.koksmat/kitchenroot .
-WORKDIR /kitchens/magic-master
+WORKDIR /kitchens/nexi-meeting
 COPY . .  
-WORKDIR /kitchens/magic-master/.koksmat/app
+WORKDIR /kitchens/nexi-meeting/.koksmat/app
 
 RUN go install
 

@@ -14,7 +14,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/magicbutton/magic-master/utils"
+	"github.com/nexi-intra/nexi-meeting/utils"
 )
 
 type SelectResponse struct {

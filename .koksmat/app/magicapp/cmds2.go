@@ -3,8 +3,8 @@ package magicapp
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/magicbutton/magic-master/cmds"
-	"github.com/magicbutton/magic-master/utils"
+	"github.com/nexi-intra/nexi-meeting/cmds"
+	"github.com/nexi-intra/nexi-meeting/utils"
 )
 
 func RegisterCmds() {

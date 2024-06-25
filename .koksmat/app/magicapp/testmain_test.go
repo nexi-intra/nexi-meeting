@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/magicbutton/magic-master/utils"
+	"github.com/nexi-intra/nexi-meeting/utils"
 )
 
 func TestMain(m *testing.M) {

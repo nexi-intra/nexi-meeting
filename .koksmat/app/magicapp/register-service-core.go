@@ -8,7 +8,7 @@ keep: true
 package magicapp
 
 import (
-	"github.com/magicbutton/magic-master/services"
+	"github.com/nexi-intra/nexi-meeting/services"
 	"github.com/nats-io/nats.go/micro"
 )
 

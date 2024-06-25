@@ -88,7 +88,7 @@ WaitForEstablishedConnection:
 	// sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	// db := bun.NewDB(sqldb, pgdialect.New())
 	// utils.Db = db
-	const name = "magic-master"
+	const name = "nexi-meeting"
 	srv, err := micro.AddService(nc, micro.Config{
 		Name: name,
 

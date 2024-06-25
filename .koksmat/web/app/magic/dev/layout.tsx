@@ -75,7 +75,7 @@ export default function Layout(props: { children: any }) {
         {/* <div>{folderPath}</div> */}
         <div className="flex">
           <div className="hidden lg:block lg:w-1/4">
-            <LeafTree leafs={pagemap.leafs} appName="magic-master" />
+            <LeafTree leafs={pagemap.leafs} appName="nexi-meeting" />
           </div>
           <div className="lg:hidden ">
             <Sheet>
@@ -83,7 +83,7 @@ export default function Layout(props: { children: any }) {
                 <MenuIcon />
               </SheetTrigger>
               <SheetContent side="left">
-                <LeafTree leafs={pagemap.leafs} appName="magic-master" />
+                <LeafTree leafs={pagemap.leafs} appName="nexi-meeting" />
               </SheetContent>
             </Sheet>
           </div>

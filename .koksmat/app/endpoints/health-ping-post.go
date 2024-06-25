@@ -13,7 +13,7 @@ import (
 
 	"github.com/swaggest/usecase"
 
-	"github.com/magicbutton/magic-master/execution"
+	"github.com/nexi-intra/nexi-meeting/execution"
 )
 
 func HealthPingPost() usecase.Interactor {
@@ -22,7 +22,7 @@ func HealthPingPost() usecase.Interactor {
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input Request, output *string) error {
 
-		_, err := execution.ExecutePowerShell("john", "*", "magic-master", "00-health", "10-ping.ps1", "", "-pong", input.Pong)
+		_, err := execution.ExecutePowerShell("john", "*", "nexi-meeting", "00-health", "10-ping.ps1", "", "-pong", input.Pong)
 		if err != nil {
 			return err
 		}

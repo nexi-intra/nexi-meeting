@@ -15,19 +15,19 @@ import (
 	"os"
 	"path"
 
-	"github.com/magicbutton/magic-master/execution"
-	"github.com/magicbutton/magic-master/schemas"
-	"github.com/magicbutton/magic-master/utils"
+	"github.com/nexi-intra/nexi-meeting/execution"
+	"github.com/nexi-intra/nexi-meeting/schemas"
+	"github.com/nexi-intra/nexi-meeting/utils"
 )
 
 func UsecasesGetUserPost(ctx context.Context, args []string) (*schemas.User, error) {
 
-	result, pwsherr := execution.ExecutePowerShell("john", "*", "magic-master", "05-usecases", "10-get-user.ps1", "", "-userid", args[0])
+	result, pwsherr := execution.ExecutePowerShell("john", "*", "nexi-meeting", "05-usecases", "10-get-user.ps1", "", "-userid", args[0])
 	if pwsherr != nil {
 		return nil, pwsherr
 	}
 
-	resultingFile := path.Join(utils.WorkDir("magic-master"), "user.json")
+	resultingFile := path.Join(utils.WorkDir("nexi-meeting"), "user.json")
 	data, err := os.ReadFile(resultingFile)
 	if err != nil {
 		return nil, err
