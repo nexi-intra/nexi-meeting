@@ -57,7 +57,7 @@ jobs:
         run: |
           $app_name = "${{ github.repository }}-canary".Replace("/", "-")
           $app_name | Out-File -FilePath appname.txt
-          $dnsname =$app_name + ".intra.nexigroup.com"
+          $dnsname =$app_name + ".${{ vars.DOMAIN }}" 
           @"
             apiVersion: apps/v1
             kind: Deployment
@@ -131,21 +131,21 @@ jobs:
 
       - name: Set AKS context
         run: |
-          az aks get-credentials --resource-group ${{ secrets.AZURE_RG }} --name ${{ secrets.AZURE_AKS }}
+          az aks get-credentials --resource-group ${{ vars.AZURE_RG }} --name ${{ vars.AZURE_AKS }}
 
       - name: Deploy to AKS
         run: |
           cat deployment.yml
-          kubectl apply -f deployment.yml -n magicbox-christianiabpos
+          kubectl apply -f deployment.yml -n ${{ vars.K8_NAMESPACE }}
 
           cat service.yml
-          kubectl apply -f service.yml -n magicbox-christianiabpos
+          kubectl apply -f service.yml -n ${{ vars.K8_NAMESPACE }}
 
           cat ingress.yml
-          kubectl apply -f ingress.yml -n magicbox-christianiabpos
+          kubectl apply -f ingress.yml -n ${{ vars.K8_NAMESPACE }}
 
       - name: Restart Deployment
         shell: pwsh
         run: |
           $app_name = Get-Content -Path appname.txt
-          kubectl rollout restart deployment/$app_name -n magicbox-christianiabpos
+          kubectl rollout restart deployment/$app_name -n ${{ vars.K8_NAMESPACE }}
