@@ -27,6 +27,13 @@ const cases: CaseProps[] = [
     testurl: "https://graph.microsoft.com/v1.0/me/messages",
   },
   {
+    scopes: ["Calendars.Read"],
+    title: "Read events",
+    testurl:
+      "https://graph.microsoft.com/v1.0/me/events?$select=subject,body,bodyPreview,organizer,attendees,start,end,location",
+  },
+
+  {
     scopes: ["User.Read", "Group.Read.All"],
     title: "Get memberships",
     testurl: "https://graph.microsoft.com/v1.0/me/memberOf?$count=true",

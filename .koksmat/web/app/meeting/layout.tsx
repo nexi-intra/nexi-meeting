@@ -53,7 +53,7 @@ export default function Layout(props: { children: any }) {
         <div className="p-2 text-white font-extralight text-2xl  md:text-4xl mt-3 ml-10 md:mt-2 md:ml-0 w-full">
           <div className="flex">
             <div>
-              <Link href="/">{"meeting"}</Link>
+              <Link href="/">{"meeting services"}</Link>
             </div>
             <div className="grow"></div>
             <div>

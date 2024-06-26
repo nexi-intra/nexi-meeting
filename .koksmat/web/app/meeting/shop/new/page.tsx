@@ -1,10 +1,10 @@
+import { OrderForm } from "@/components/OrderForm";
 import OutlookAppointmentConnect from "@/components/OutlookAppointmentConnect";
 
 export default function Page() {
   return (
     <div>
-      <h1>Page</h1>
-      <OutlookAppointmentConnect />
+      <OrderForm />
     </div>
   );
 }

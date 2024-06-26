@@ -22,6 +22,7 @@ import {
   Truck,
   Users2,
   FileText,
+  Calendar,
 } from "lucide-react";
 export const leftRailApps: AppLeftRailProps = {
   topApps: [
@@ -33,7 +34,12 @@ export const leftRailApps: AppLeftRailProps = {
     {
       icon: <ShoppingCart className="h-5 w-5" />,
       title: "Order Catering",
-      href: `/${APPNAME}/shop`,
+      href: `/${APPNAME}/shop/new`,
+    },
+    {
+      icon: <Calendar className="h-5 w-5" />,
+      title: "Plan",
+      href: `/${APPNAME}/plan`,
     },
     {
       icon: <Truck className="h-5 w-5" />,

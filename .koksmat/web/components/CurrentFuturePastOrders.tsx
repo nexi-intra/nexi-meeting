@@ -5,7 +5,7 @@
  */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useGraph2 } from "@/app/koksmat/usegraph2";
 
 interface Order {
   id: number;
@@ -26,8 +27,198 @@ interface Order {
   outlook: string | null;
 }
 
+export interface Event {
+  "@odata.etag": string;
+  id: string;
+  createdDateTime: string;
+  lastModifiedDateTime: string;
+  changeKey: string;
+  categories: any[];
+  transactionId?: string;
+  originalStartTimeZone: string;
+  originalEndTimeZone: string;
+  iCalUId: string;
+  uid: string;
+  reminderMinutesBeforeStart: number;
+  isReminderOn: boolean;
+  hasAttachments: boolean;
+  subject: string;
+  bodyPreview: string;
+  importance: string;
+  sensitivity: string;
+  isAllDay: boolean;
+  isCancelled: boolean;
+  isOrganizer: boolean;
+  responseRequested: boolean;
+  seriesMasterId?: string;
+  showAs: string;
+  type: string;
+  webLink: string;
+  onlineMeetingUrl?: string;
+  isOnlineMeeting: boolean;
+  onlineMeetingProvider: string;
+  allowNewTimeProposals: boolean;
+  occurrenceId?: string;
+  isDraft: boolean;
+  hideAttendees: boolean;
+  responseStatus: ResponseStatus;
+  body: Body;
+  start: Start;
+  end: End;
+  location: Location;
+  locations: Location2[];
+  recurrence: any;
+  attendees: Attendee[];
+  organizer: Organizer;
+  onlineMeeting?: OnlineMeeting;
+}
+
+export interface ResponseStatus {
+  response: string;
+  time: string;
+}
+
+export interface Body {
+  contentType: string;
+  content: string;
+}
+
+export interface Start {
+  dateTime: string;
+  timeZone: string;
+}
+
+export interface End {
+  dateTime: string;
+  timeZone: string;
+}
+
+export interface Location {
+  displayName: string;
+  locationType: string;
+  uniqueId?: string;
+  uniqueIdType: string;
+  address?: Address;
+  coordinates?: Coordinates;
+}
+
+export interface Address {}
+
+export interface Coordinates {}
+
+export interface Location2 {
+  displayName: string;
+  locationType: string;
+  uniqueId: string;
+  uniqueIdType: string;
+  locationUri?: string;
+  address?: Address2;
+  coordinates?: Coordinates2;
+}
+
+export interface Address2 {
+  street: string;
+  city: string;
+  state: string;
+  countryOrRegion: string;
+  postalCode: string;
+}
+
+export interface Coordinates2 {}
+
+export interface Attendee {
+  type: string;
+  status: Status;
+  emailAddress: EmailAddress;
+}
+
+export interface Status {
+  response: string;
+  time: string;
+}
+
+export interface EmailAddress {
+  name: string;
+  address: string;
+}
+
+export interface Organizer {
+  emailAddress: EmailAddress2;
+}
+
+export interface EmailAddress2 {
+  name: string;
+  address: string;
+}
+
+export interface OnlineMeeting {
+  joinUrl: string;
+  conferenceId?: string;
+  tollNumber?: string;
+}
+function GetEndpointFor7nextdays(deltaDays: number) {
+  // Setting startDateTime to today at 00:00
+  const now = new Date();
+  const futureDate = new Date(now.getTime() + deltaDays * 24 * 3600 * 1000);
+
+  futureDate.setHours(0, 0, 0, 0); // Resets to midnight
+  const startDateTime = futureDate.toISOString();
+
+  // Setting endDateTime to 7 days   from startDateTime
+  const endDateTime = new Date(
+    futureDate.getTime() + 7 * 24 * 3600 * 1000
+  ).toISOString();
+
+  return `https://graph.microsoft.com/v1.0/me/calendarView?startDateTime=${encodeURIComponent(
+    startDateTime
+  )}&endDateTime=${encodeURIComponent(endDateTime)}&$orderby=start/dateTime`;
+}
+function GetEndpointForToDayAndTomorrow() {
+  // Setting startDateTime to today at 00:00
+  const now = new Date();
+  //now.setHours(0, 0, 0, 0); // Resets to midnight
+  const startDateTime = now.toISOString();
+
+  // Setting endDateTime to 48 hours from startDateTime
+  const endDateTime = new Date(now.getTime() + 48 * 3600 * 1000).toISOString();
+
+  return `https://graph.microsoft.com/v1.0/me/calendarView?startDateTime=${encodeURIComponent(
+    startDateTime
+  )}&endDateTime=${encodeURIComponent(endDateTime)}&$orderby=start/dateTime`;
+}
+function GetEndpointForPrev7Days() {
+  // Setting startDateTime to today at 00:00
+  const now = new Date();
+  //now.setHours(0, 0, 0, 0); // Resets to midnight
+  const startDateTime = new Date(
+    now.getTime() - 24 * 7 * 3600 * 1000
+  ).toISOString();
+
+  // Setting endDateTime to 48 hours from startDateTime
+  const endDateTime = now.toISOString();
+
+  return `https://graph.microsoft.com/v1.0/me/calendarView?startDateTime=${encodeURIComponent(
+    startDateTime
+  )}&endDateTime=${encodeURIComponent(endDateTime)}&$orderby=start/dateTime`;
+}
 export default function CurrentFuturePastOrders() {
   const router = useRouter();
+  const todayAndTomorrow = useGraph2<Event[]>(
+    GetEndpointForToDayAndTomorrow(),
+    ["Calendars.Read"],
+    3
+  );
+  const [deltaDays, setdeltaDays] = useState(0);
+  const next7days = useGraph2<Event[]>(
+    GetEndpointFor7nextdays(2),
+    ["Calendars.Read"],
+    3
+  );
+  const prev7days = useGraph2<Event[]>(
+    GetEndpointForPrev7Days(),
+    ["Calendars.Read"],
+    3
+  );
   const [activeTab, setActiveTab] = useState<"current" | "future" | "past">(
     "current"
   );
@@ -53,7 +244,7 @@ export default function CurrentFuturePastOrders() {
       date: "2024-04-01",
       status: "past",
       outlook:
-        "https://outlook.office.com/calendar/item?subject=Quarterly%20Business%20Review&start=2024-04-01T14:00:00&end=2024-04-01T16:00:00",
+        "https://outlook.office.com/calendar/item?subject=Quarterly%20Business%20Review&start=2024-04-01T14:00:00&end=2024-04-01T16:00:00 desc",
     },
   ]);
 
@@ -77,7 +268,21 @@ export default function CurrentFuturePastOrders() {
   const handleCancelOrder = (id: number) => {
     setOrders(orders.filter((order) => order.id !== id));
   };
+  // Function to convert UTC date to the current local timezone
+  function convertUtcToLocal(utcDateTime: string, utcTimeZone: string) {
+    // Assuming the utcTimeZone is something like 'UTC' or an offset like 'UTC+0'
+    const date = new Date(utcDateTime + "Z"); // Append 'Z' to denote UTC time
 
+    // Using toLocaleString to display in local time with desired options
+    return date.toLocaleString("de-DE", {
+      month: "numeric",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  }
   const handleConnectToOutlook = (id: number) => {
     const updatedOrders = orders.map((order) => {
       if (order.id === id) {
@@ -95,7 +300,7 @@ export default function CurrentFuturePastOrders() {
   return (
     <div className="w-full max-w-4xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Meeting Planner</h1>
+        <h1 className="text-2xl font-bold">Your Meetings</h1>
         <Button size="lg" onClick={handleAddOrder}>
           Add New Order
         </Button>
@@ -114,137 +319,67 @@ export default function CurrentFuturePastOrders() {
         </TabsList>
         <TabsContent value="current" className="py-6">
           <div className="grid gap-4">
-            {orders
-              .filter((order) => order.status === "current")
-              .map((order) => (
-                <Card key={order.id}>
-                  <CardHeader>
-                    <CardTitle>{order.name}</CardTitle>
-                    <CardDescription>
-                      {new Date(order.date).toLocaleDateString("en-US", {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        {order.outlook && (
-                          <Link
-                            href={order.outlook}
-                            target="_blank"
-                            prefetch={false}
-                          >
-                            View in Outlook
-                          </Link>
-                        )}
-                      </div>
-                      <Button
-                        variant="outline"
-                        onClick={() => handleEditOrder(order.id)}
-                      >
-                        Edit
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+            {todayAndTomorrow.result.map((event) => (
+              <EventItemCard
+                event={event}
+                convertUtcToLocal={convertUtcToLocal}
+              />
+            ))}
           </div>
         </TabsContent>
         <TabsContent value="future" className="py-6">
           <div className="grid gap-4">
-            {orders
-              .filter((order) => order.status === "future")
-              .map((order) => (
-                <Card key={order.id}>
-                  <CardHeader>
-                    <CardTitle>{order.name}</CardTitle>
-                    <CardDescription>
-                      {new Date(order.date).toLocaleDateString("en-US", {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        {order.outlook ? (
-                          <Link
-                            href={order.outlook}
-                            target="_blank"
-                            prefetch={false}
-                          >
-                            View in Outlook
-                          </Link>
-                        ) : (
-                          <Button
-                            variant="outline"
-                            onClick={() => handleConnectToOutlook(order.id)}
-                          >
-                            Connect to Outlook
-                          </Button>
-                        )}
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          onClick={() => handleEditOrder(order.id)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => handleCancelOrder(order.id)}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+            <div className="grid gap-4">
+              {next7days.result.map((event) => (
+                <EventItemCard
+                  event={event}
+                  convertUtcToLocal={convertUtcToLocal}
+                />
               ))}
+            </div>
           </div>
         </TabsContent>
         <TabsContent value="past" className="py-6">
           <div className="grid gap-4">
-            {orders
-              .filter((order) => order.status === "past")
-              .map((order) => (
-                <Card key={order.id}>
-                  <CardHeader>
-                    <CardTitle>{order.name}</CardTitle>
-                    <CardDescription>
-                      {new Date(order.date).toLocaleDateString("en-US", {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        {order.outlook && (
-                          <Link
-                            href={order.outlook}
-                            target="_blank"
-                            prefetch={false}
-                          >
-                            View in Outlook
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+            <div className="grid gap-4">
+              {prev7days.result.map((event) => (
+                <EventItemCard
+                  event={event}
+                  convertUtcToLocal={convertUtcToLocal}
+                />
               ))}
+            </div>
           </div>
         </TabsContent>
       </Tabs>
     </div>
+  );
+}
+function EventItemCard(props: {
+  event: Event;
+  convertUtcToLocal: (utcDateTime: string, utcTimeZone: string) => string;
+}) {
+  const { event, convertUtcToLocal } = props;
+  return (
+    <Card key={event.id}>
+      <CardHeader>
+        <CardTitle>{event.subject}</CardTitle>
+        <CardDescription>
+          {convertUtcToLocal(event.start.dateTime, event.start.timeZone)}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-center justify-between">
+          <div>
+            <Link href={event.webLink} target="_blank" prefetch={false}>
+              View in Outlook
+            </Link>
+          </div>
+          <Button disabled variant="outline">
+            View
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
