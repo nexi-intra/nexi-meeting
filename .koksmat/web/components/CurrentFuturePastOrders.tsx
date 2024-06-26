@@ -321,6 +321,7 @@ export default function CurrentFuturePastOrders() {
           <div className="grid gap-4">
             {todayAndTomorrow.result.map((event) => (
               <EventItemCard
+                key={event.id}
                 event={event}
                 convertUtcToLocal={convertUtcToLocal}
               />
@@ -332,6 +333,7 @@ export default function CurrentFuturePastOrders() {
             <div className="grid gap-4">
               {next7days.result.map((event) => (
                 <EventItemCard
+                  key={event.id}
                   event={event}
                   convertUtcToLocal={convertUtcToLocal}
                 />
@@ -344,6 +346,7 @@ export default function CurrentFuturePastOrders() {
             <div className="grid gap-4">
               {prev7days.result.map((event) => (
                 <EventItemCard
+                  key={event.id}
                   event={event}
                   convertUtcToLocal={convertUtcToLocal}
                 />
