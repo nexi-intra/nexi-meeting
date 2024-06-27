@@ -26,6 +26,10 @@ import {
   isOrderDateAcceptable,
 } from "@/lib/dates";
 import { MeetingContext } from "@/app/meeting/contextdefinition";
+import PickUser from "./PickUser";
+import PickDeliveryPlace from "./PickDeliveryPlace";
+import PickCostCentre from "./PickCostCentre";
+
 interface DeliveryItem {
   name: string;
   minute: number;
@@ -82,6 +86,7 @@ function DeliveryItemForm(props: DeliveryItemProps) {
         minutesFromMidnight={minutesFromMidnight}
         onChange={setMinutesFromMidnight}
       />
+      <PickDeliveryPlace />
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="link">Menu card</Button>
@@ -190,6 +195,15 @@ export function OrderForm(props: OrderFormProps) {
             date={orderDate}
             minutesFromMidnight={minutesFromMidnight}
           />
+        </div>
+        <div>
+          <PickDeliveryPlace />
+        </div>
+        {/* <div>
+          <PickUser />
+        </div> */}
+        <div>
+          <PickCostCentre />
         </div>
       </div>
       <div>
