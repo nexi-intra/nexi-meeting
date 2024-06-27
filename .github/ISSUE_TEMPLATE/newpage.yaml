@@ -1,0 +1,32 @@
+name: New Page
+description: Request for a new page
+title: "[REQUEST] <title>"
+labels: ["Page"]
+body:
+  - type: textarea
+    attributes:
+      label: TLDR;
+      description: A one liner explaining the request
+    validations:
+      required: true
+- type: dropdown
+  id: area
+  attributes:
+    label: Which area 
+    options:
+      - Customer Order
+      - Backoffice Order Management
+      - Supplier Delivery Management
+      - Invoicing
+      - Other
+  validations:
+    required: true
+    
+
+  - type: textarea
+    attributes:
+      label: A prompt for v0.dev or chat.gpt
+      description: |
+       I working as a project manager and like a page I can visit every morning to give me support when having to prirorities my work
+    validations:
+      required: false
