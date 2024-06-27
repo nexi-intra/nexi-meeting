@@ -1,280 +1,247 @@
 "use client";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { use, useContext, useEffect, useMemo, useState } from "react";
+import { DatePicker } from "./DatePicker";
+import { TimePicker } from "./TimePicker";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { min, set } from "date-fns";
+import { Delete, DeleteIcon, Trash } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { z } from "zod";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import MenuCard, { MenuCardItem } from "./MenuCard";
+import {
+  addMinutesToMidnight,
+  getDayOfWeekInLocalTime,
+  getMidnightDate,
+  getMinutesSinceMidnightRounded,
+  isOrderDateAcceptable,
+} from "@/lib/dates";
+import { MeetingContext } from "@/app/meeting/contextdefinition";
+interface DeliveryItem {
+  name: string;
+  minute: number;
+  description: string;
+  items: MenuCardItem[];
+}
+interface DeliveryItemProps {
+  item: DeliveryItem;
+  onChange: (item: DeliveryItem) => void;
+}
+function DeliveryItemForm(props: DeliveryItemProps) {
+  const [name, setname] = useState(props.item.name);
+  const [minutesFromMidnight, setMinutesFromMidnight] = useState<number>(0);
+  const [description, setdescription] = useState(props.item.description);
+  const [items, setitems] = useState<MenuCardItem[]>([]);
+  useEffect(() => {
+    setMinutesFromMidnight(props.item.minute);
+  }, [props.item.minute]);
 
-const orderSchema = z.object({
-  deliveryDate: z.string().nonempty({ message: "Delivery date is required" }),
-  deliveryTime: z.string().nonempty({ message: "Delivery time is required" }),
-  location: z.string().nonempty({ message: "Delivery location is required" }),
-  department: z.string().nonempty({ message: "Department is required" }),
-  menu: z.array(
-    z.object({
-      name: z.string(),
-      note: z.string().optional(),
-      price: z.number(),
-      quantity: z.number().optional(),
-    })
-  ),
-  generalNote: z.string().optional(),
-});
+  useEffect(() => {
+    setname(props.item.name);
+  }, [props.item.name]);
 
-type OrderFormValues = z.infer<typeof orderSchema>;
-
-export function OrderForm() {
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<OrderFormValues>({
-    resolver: zodResolver(orderSchema),
-  });
-
-  const onSubmit: SubmitHandler<OrderFormValues> = (data) => {
-    console.log(data);
-  };
+  useEffect(() => {
+    if (!name) return;
+    if (minutesFromMidnight === 0) return;
+    props.onChange({
+      name: name,
+      minute: minutesFromMidnight,
+      description: description,
+      items,
+    });
+  }, [name, minutesFromMidnight, description]);
+  useEffect(() => {
+    setdescription(props.item.description);
+  }, [props.item.description]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-8">
-      {/* Delivery Date */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <div>
-          <Label htmlFor="delivery-date">Delivery Date</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Input
-                id="delivery-date"
-                type="text"
-                placeholder="Select a date"
-                className="cursor-pointer"
-                {...register("deliveryDate")}
-              />
-            </PopoverTrigger>
-            <PopoverContent className="p-0 max-w-[276px]">
-              <Calendar />
-            </PopoverContent>
-          </Popover>
-          {errors.deliveryDate && <p>{errors.deliveryDate.message}</p>}
-        </div>
-
-        {/* Delivery Time */}
-        <div>
-          <Label htmlFor="delivery-time">Delivery Time</Label>
-          <Select {...register("deliveryTime")}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a time" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="8:00 AM">8:00 AM</SelectItem>
-              <SelectItem value="9:00 AM">9:00 AM</SelectItem>
-              <SelectItem value="10:00 AM">10:00 AM</SelectItem>
-              <SelectItem value="11:00 AM">11:00 AM</SelectItem>
-              <SelectItem value="12:00 PM">12:00 PM</SelectItem>
-              <SelectItem value="1:00 PM">1:00 PM</SelectItem>
-              <SelectItem value="2:00 PM">2:00 PM</SelectItem>
-              <SelectItem value="3:00 PM">3:00 PM</SelectItem>
-            </SelectContent>
-          </Select>
-          {errors.deliveryTime && <p>{errors.deliveryTime.message}</p>}
-        </div>
-      </div>
-
-      {/* Delivery Location and Department */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <div>
-          <Label htmlFor="location">Delivery Location</Label>
-          <Select {...register("location")}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a location" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="meeting-room-1">Meeting Room 1</SelectItem>
-              <SelectItem value="meeting-room-2">Meeting Room 2</SelectItem>
-              <SelectItem value="meeting-room-3">Meeting Room 3</SelectItem>
-              <SelectItem value="pickup">Pickup</SelectItem>
-            </SelectContent>
-          </Select>
-          {errors.location && <p>{errors.location.message}</p>}
-        </div>
-
-        <div>
-          <Label htmlFor="department">Department</Label>
-          <Select {...register("department")}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a department" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="finance">Finance</SelectItem>
-              <SelectItem value="marketing">Marketing</SelectItem>
-              <SelectItem value="hr">HR</SelectItem>
-              <SelectItem value="it">IT</SelectItem>
-            </SelectContent>
-          </Select>
-          {errors.department && <p>{errors.department.message}</p>}
-        </div>
-      </div>
-
-      {/* Menu Items */}
-      <div>
-        <Label>Menu</Label>
-        <div className="grid gap-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Breakfast</CardTitle>
-                <CardDescription>7:00 AM - 11:00 AM</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <MenuItem
-                  name="Breakfast Burrito"
-                  price={8.99}
-                  register={register}
-                />
-                <MenuItem
-                  name="Avocado Toast"
-                  price={6.99}
-                  register={register}
-                />
-                <MenuItem
-                  name="Fruit Parfait"
-                  price={5.99}
-                  register={register}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Lunch</CardTitle>
-                <CardDescription>11:00 AM - 3:00 PM</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <MenuItem
-                  name="Grilled Chicken Salad"
-                  price={12.99}
-                  register={register}
-                />
-                <MenuItem
-                  name="Veggie Wrap"
-                  price={10.99}
-                  register={register}
-                />
-                <MenuItem
-                  name="Beef Lasagna"
-                  price={14.99}
-                  register={register}
-                />
-              </CardContent>
-            </Card>
+    <div className="border rounded-xl drop-shadow-sm p-4 space-y-2 w-full bg-slate-200">
+      <Input
+        type="text"
+        value={name}
+        placeholder="Name (e.g. Breakfaxt)"
+        onChange={(v) => setname(v.target.value)}
+      />
+      <Input
+        type="text"
+        placeholder="Comments (e.g. No onions)"
+        value={description}
+        onChange={(v) => setdescription(v.target.value)}
+      />
+      Time
+      <TimePicker
+        minutesFromMidnight={minutesFromMidnight}
+        onChange={setMinutesFromMidnight}
+      />
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant="link">Menu card</Button>
+        </SheetTrigger>
+        <SheetContent className="h-[80vh] overflow-scroll " side="bottom">
+          <SheetHeader className="sticky">
+            <SheetTitle>Menucard</SheetTitle>
+            <SheetDescription>
+              Select from the menu card to add to the order
+            </SheetDescription>
+          </SheetHeader>
+          <div className="grid gap-4 py-4 overflow-scroll">
+            <MenuCard
+              onAddToOrder={(item) => {
+                items.push(item);
+                setitems([...items]);
+                console.log("Added to order", item);
+              }}
+            />
           </div>
-        </div>
-      </div>
-
-      {/* General Note */}
-      <div>
-        <Label>General Note</Label>
-        <Input
-          type="text"
-          placeholder="Add a general note"
-          {...register("generalNote")}
-        />
-      </div>
-
-      {/* Order Summary */}
-      <div>
-        <Label>Order Summary</Label>
-        <Card>
-          <CardContent>
-            <div className="grid gap-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-medium">Breakfast Burrito</h3>
-                  <p className="text-sm text-muted-foreground">Quantity: 10</p>
-                </div>
-                <div className="font-medium">$89.90</div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-medium">Grilled Chicken Salad</h3>
-                  <p className="text-sm text-muted-foreground">Quantity: 15</p>
-                </div>
-                <div className="font-medium">$194.85</div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-medium">Assorted Cookies</h3>
-                  <p className="text-sm text-muted-foreground">Quantity: 20</p>
-                </div>
-                <div className="font-medium">$79.80</div>
-              </div>
-              <Separator />
-              <div className="flex items-center justify-between">
-                <div className="font-medium">Total</div>
-                <div className="font-medium">$364.55</div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">Delivery Details</p>
-                  <p className="text-sm text-muted-foreground">
-                    Meeting Room 2 - 10:00 AM
-                  </p>
-                </div>
-                <Button className="ml-auto" type="submit">
-                  Place Order
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </form>
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button type="submit">Save changes</Button>
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    </div>
   );
 }
 
-type MenuItemProps = {
-  name: string;
-  price: number;
-  register: any;
-};
+export interface OrderData {
+  datetime: Date;
 
-const MenuItem: React.FC<MenuItemProps> = ({ name, price, register }) => (
-  <div className="flex items-center justify-between">
+  deliveryTimes: DeliveryItem[];
+}
+
+export interface OrderFormProps {
+  startDateTime: Date;
+  endDateTime: Date;
+  order: OrderData;
+}
+
+function ValidDateTime(props: {
+  date: Date | undefined;
+  minutesFromMidnight: number;
+}) {
+  const meetingContext = useContext(MeetingContext);
+  const { date, minutesFromMidnight } = props;
+  if (date == undefined) return null;
+  const dw = getDayOfWeekInLocalTime(date);
+  const { isAcceptable, reason } = isOrderDateAcceptable(
+    meetingContext.now,
+    date
+  );
+
+  if (!isAcceptable) return <div className="bg-red-400"> {reason}</div>;
+  return null;
+}
+
+export function OrderForm(props: OrderFormProps) {
+  const [orderDate, setorderDate] = useState<Date>();
+  const [minutesFromMidnight, setMinutesFromMidnight] = useState<number>(0);
+  const [valid, setvalid] = useState(false);
+  const [deliveryTimes, setdeliveryTimes] = useState<DeliveryItem[]>([]);
+  const [order, setorder] = useState<OrderData>();
+  const meetingContext = useContext(MeetingContext);
+  useEffect(() => {
+    if (!props.order) return;
+    setdeliveryTimes(props.order.deliveryTimes);
+    setorderDate(props.order.datetime);
+    const minutes = getMinutesSinceMidnightRounded(props.order.datetime);
+    setMinutesFromMidnight(minutes);
+  }, [props.order]);
+
+  useEffect(() => {
+    setvalid(orderDate !== undefined && minutesFromMidnight !== 0);
+  }, [orderDate, minutesFromMidnight]);
+
+  useEffect(() => {
+    setorderDate(getMidnightDate(props.startDateTime));
+    setMinutesFromMidnight(getMinutesSinceMidnightRounded(props.startDateTime));
+  }, [props.startDateTime, props.endDateTime]);
+
+  const submitOrder = () => {
+    setorder({
+      datetime: addMinutesToMidnight(orderDate!, minutesFromMidnight),
+
+      deliveryTimes: deliveryTimes,
+    });
+    console.log("Order submitted");
+  };
+  return (
     <div>
-      <h3 className="font-medium">{name}</h3>
-      <p className="text-sm text-muted-foreground">Some description here</p>
+      <h1>Order Form</h1>
+      <div className="flex space-x-2">
+        <DatePicker date={orderDate} setDate={setorderDate} />
+        <div className="max-w-32">
+          <TimePicker
+            minutesFromMidnight={minutesFromMidnight}
+            onChange={setMinutesFromMidnight}
+          />
+        </div>
+        <div>
+          <ValidDateTime
+            date={orderDate}
+            minutesFromMidnight={minutesFromMidnight}
+          />
+        </div>
+      </div>
+      <div>
+        {deliveryTimes
+          .sort((a, b) => a.minute - b.minute)
+          .map((item, index) => (
+            <div key={index} className="flex mb-4">
+              <div className="grow">
+                <DeliveryItemForm
+                  item={item}
+                  onChange={(item) => {
+                    deliveryTimes[index] = item;
+                    setdeliveryTimes([...deliveryTimes]);
+                  }}
+                />
+              </div>
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  deliveryTimes.splice(index, 1);
+                  setdeliveryTimes([...deliveryTimes]);
+                }}
+              >
+                <Trash />
+              </Button>
+            </div>
+          ))}
+        <Button
+          variant="default"
+          onClick={() => {
+            deliveryTimes.push({
+              name: "",
+              minute: minutesFromMidnight,
+              description: "",
+              items: [],
+            });
+            setdeliveryTimes([...deliveryTimes]);
+          }}
+        >
+          Add
+        </Button>
+      </div>
+      <pre>
+        {JSON.stringify(
+          { meetingContext, minutesFromMidnight, order, props },
+          null,
+          2
+        )}
+      </pre>
+      <Button disabled={!valid} onClick={submitOrder}>
+        Submit
+      </Button>
     </div>
-    <div className="font-medium">${price}</div>
-    <div>
-      <Input
-        type="text"
-        placeholder="Add a note"
-        className="w-32"
-        {...register(`menu.${name.replace(" ", "-").toLowerCase()}.note`)}
-      />
-    </div>
-  </div>
-);
+  );
+}

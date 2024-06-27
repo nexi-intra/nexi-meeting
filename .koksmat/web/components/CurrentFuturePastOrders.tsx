@@ -18,6 +18,8 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useGraph2 } from "@/app/koksmat/usegraph2";
+import { Badge } from "./ui/badge";
+import { convertUtcToLocal } from "@/lib/dates";
 
 interface Order {
   id: number;
@@ -268,21 +270,7 @@ export default function CurrentFuturePastOrders() {
   const handleCancelOrder = (id: number) => {
     setOrders(orders.filter((order) => order.id !== id));
   };
-  // Function to convert UTC date to the current local timezone
-  function convertUtcToLocal(utcDateTime: string, utcTimeZone: string) {
-    // Assuming the utcTimeZone is something like 'UTC' or an offset like 'UTC+0'
-    const date = new Date(utcDateTime + "Z"); // Append 'Z' to denote UTC time
 
-    // Using toLocaleString to display in local time with desired options
-    return date.toLocaleString("de-DE", {
-      month: "numeric",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-  }
   const handleConnectToOutlook = (id: number) => {
     const updatedOrders = orders.map((order) => {
       if (order.id === id) {
@@ -369,6 +357,7 @@ function EventItemCard(props: {
         <CardTitle>{event.subject}</CardTitle>
         <CardDescription>
           {convertUtcToLocal(event.start.dateTime, event.start.timeZone)}
+          <ShowLocation locations={event.locations} />
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -378,11 +367,27 @@ function EventItemCard(props: {
               View in Outlook
             </Link>
           </div>
-          <Button disabled variant="outline">
+          {event.isOrganizer && (
+            <Badge color="blue" className="text-xs">
+              Organizer
+            </Badge>
+          )}
+          {/* <Button disabled variant="outline">
             View
-          </Button>
+          </Button> */}
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+function ShowLocation(props: { locations: Location2[] }) {
+  const { locations } = props;
+  return (
+    <div>
+      {locations.map((location) => (
+        <div key={location.uniqueId}>{location.displayName}</div>
+      ))}
+    </div>
   );
 }
