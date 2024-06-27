@@ -1,3 +1,6 @@
+/*
+https://github.com/nexi-intra/nexi-meeting/issues/2
+*/
 "use client";
 import { use, useContext, useEffect, useMemo, useState } from "react";
 import { DatePicker } from "./DatePicker";
@@ -246,13 +249,13 @@ export function OrderForm(props: OrderFormProps) {
           Add
         </Button>
       </div>
-      <pre>
+      {/* <pre>
         {JSON.stringify(
           { meetingContext, minutesFromMidnight, order, props },
           null,
           2
         )}
-      </pre>
+      </pre> */}
       <Button disabled={!valid} onClick={submitOrder}>
         Submit
       </Button>
