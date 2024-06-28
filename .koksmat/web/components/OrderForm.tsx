@@ -133,7 +133,7 @@ export interface OrderFormProps {
   order: OrderData;
 }
 
-function ValidDateTime(props: {
+export function ValidDateTime(props: {
   date: Date | undefined;
   minutesFromMidnight: number;
 }) {

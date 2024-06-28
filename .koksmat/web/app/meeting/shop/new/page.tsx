@@ -66,13 +66,6 @@ export default function Page() {
           order={defaultorder!}
         />
       )}
-      <pre>
-        {JSON.stringify(
-          { defaultorder, orderDateTime, startDateTime, endDateTime },
-          null,
-          2
-        )}
-      </pre>
     </div>
   );
 }

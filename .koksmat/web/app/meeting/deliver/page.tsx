@@ -1,7 +1,9 @@
+import DeliveryOverview from "@/components/DeliveryOverview";
+
 export default function Page() {
   return (
     <div>
-      <h1>Deliver</h1>
+      <DeliveryOverview />
     </div>
   );
 }
