@@ -13,7 +13,7 @@ import (
 
 	"github.com/swaggest/usecase"
 
-	"github.com/magicbutton/magic-master/execution"
+	"github.com/nexi-intra/nexi-meeting/execution"
 )
 
 func ProvisionWebdeploytestPost() usecase.Interactor {
@@ -21,7 +21,7 @@ func ProvisionWebdeploytestPost() usecase.Interactor {
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input Request, output *string) error {
 
-		_, err := execution.ExecutePowerShell("john", "*", "magic-master", "60-provision", "11-web-test.ps1", "")
+		_, err := execution.ExecutePowerShell("john", "*", "nexi-meeting", "60-provision", "11-web-test.ps1", "")
 		if err != nil {
 			return err
 		}

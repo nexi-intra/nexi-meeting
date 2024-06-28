@@ -21,6 +21,8 @@ import {
   ShoppingCart,
   Truck,
   Users2,
+  FileText,
+  Calendar,
 } from "lucide-react";
 export const leftRailApps: AppLeftRailProps = {
   topApps: [
@@ -30,14 +32,24 @@ export const leftRailApps: AppLeftRailProps = {
       href: `/${APPNAME}`,
     },
     {
-      icon: <Pyramid className="h-5 w-5" />,
-      title: "Organisation",
-      href: `/${APPNAME}/organisation`,
+      icon: <ShoppingCart className="h-5 w-5" />,
+      title: "Order Catering",
+      href: `/${APPNAME}/shop/new`,
     },
     {
-      icon: <Map className="h-5 w-5" />,
-      title: "Countries",
-      href: `/${APPNAME}/countries`,
+      icon: <Calendar className="h-5 w-5" />,
+      title: "Plan",
+      href: `/${APPNAME}/plan`,
+    },
+    {
+      icon: <Truck className="h-5 w-5" />,
+      title: "Deliver",
+      href: `/${APPNAME}/deliver`,
+    },
+    {
+      icon: <FileText className="h-5 w-5" />,
+      title: "Invoices",
+      href: `/${APPNAME}/invoices`,
     },
   ],
   bottomApps: [

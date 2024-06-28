@@ -13,7 +13,7 @@ import (
 
 	"github.com/swaggest/usecase"
 
-	"github.com/magicbutton/magic-master/execution"
+	"github.com/nexi-intra/nexi-meeting/execution"
 )
 
 func HealthCoreversionPost() usecase.Interactor {
@@ -21,7 +21,7 @@ func HealthCoreversionPost() usecase.Interactor {
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input Request, output *string) error {
 
-		_, err := execution.ExecutePowerShell("john", "*", "magic-master", "00-health", "20-coreversion.ps1", "")
+		_, err := execution.ExecutePowerShell("john", "*", "nexi-meeting", "00-health", "20-coreversion.ps1", "")
 		if err != nil {
 			return err
 		}

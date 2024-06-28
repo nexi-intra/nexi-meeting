@@ -5,9 +5,9 @@
     "patch": 5,
     "major": 0
   },
-  "appname": "magic-master",
+  "appname": "nexi-meeting",
   "dnsprod": "people.intra.nexigroup.com",
   "dnstest": "people-test.intra.nexigroup.com",
-  "imagename": "ghcr.io/magicbutton/magic-master",
+  "imagename": "ghcr.io/nexi-intra/nexi-meeting",
   "port": 4444
 }

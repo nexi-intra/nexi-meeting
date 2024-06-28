@@ -27,6 +27,13 @@ const cases: CaseProps[] = [
     testurl: "https://graph.microsoft.com/v1.0/me/messages",
   },
   {
+    scopes: ["Calendars.Read"],
+    title: "Read events",
+    testurl:
+      "https://graph.microsoft.com/v1.0/me/events?$select=subject,body,bodyPreview,organizer,attendees,start,end,location",
+  },
+
+  {
     scopes: ["User.Read", "Group.Read.All"],
     title: "Get memberships",
     testurl: "https://graph.microsoft.com/v1.0/me/memberOf?$count=true",
@@ -38,10 +45,21 @@ const cases: CaseProps[] = [
   },
 ];
 
+function copyToClipboard(valueToCopy: string) {
+  navigator.clipboard
+    .writeText(valueToCopy)
+    .then(() => {
+      alert("Copied to clipboard: " + valueToCopy);
+    })
+    .catch((err) => {
+      console.error("Could not copy text: ", err);
+    });
+}
 export function MSALTest() {
   const { instance, accounts, inProgress } = useMsal();
   const account = useAccount(accounts[0] || {});
   const [latestResponse, setlatestResponse] = useState<any>();
+  const [token, settoken] = useState("");
 
   const [latestError, setlatestError] = useState<any>();
   const aquireToken = async (thisCase?: CaseProps) => {
@@ -54,6 +72,7 @@ export function MSALTest() {
           account: account,
         });
         thisCase.token = response.accessToken;
+        settoken(response.accessToken);
         const getResponse = await https(
           response.accessToken,
           "GET",
@@ -67,6 +86,7 @@ export function MSALTest() {
             account: account,
           });
           thisCase.token = response.accessToken;
+          settoken(response.accessToken);
           const getResponse = await https(
             response.accessToken,
             "GET",
@@ -148,6 +168,16 @@ export function MSALTest() {
                   }}
                 >
                   Clear
+                </Button>
+                <div className="grow">&nbsp;</div>
+                <Button
+                  disabled={!token}
+                  variant={"outline"}
+                  onClick={() => {
+                    copyToClipboard(token);
+                  }}
+                >
+                  Copy token
                 </Button>
               </div>
             );

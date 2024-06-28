@@ -13,17 +13,17 @@ import (
 	"os"
 	"path"
 
-	"github.com/magicbutton/magic-master/execution"
-	"github.com/magicbutton/magic-master/utils"
+	"github.com/nexi-intra/nexi-meeting/execution"
+	"github.com/nexi-intra/nexi-meeting/utils"
 )
 
 func AnalyseParseGroupsPost(ctx context.Context, body []byte, args []string) (*string, error) {
-	inputErr := os.WriteFile(path.Join(utils.WorkDir("magic-master"), "InfocastGroups.json"), body, 0644)
+	inputErr := os.WriteFile(path.Join(utils.WorkDir("nexi-meeting"), "InfocastGroups.json"), body, 0644)
 	if inputErr != nil {
 		return nil, inputErr
 	}
 
-	result, pwsherr := execution.ExecutePowerShell("john", "*", "magic-master", "30-analyse", "10-parse-groups.ps1", "")
+	result, pwsherr := execution.ExecutePowerShell("john", "*", "nexi-meeting", "30-analyse", "10-parse-groups.ps1", "")
 	if pwsherr != nil {
 		return nil, pwsherr
 	}

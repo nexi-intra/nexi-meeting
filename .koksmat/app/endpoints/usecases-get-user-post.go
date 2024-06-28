@@ -16,9 +16,9 @@ import (
 
 	"github.com/swaggest/usecase"
 
-	"github.com/magicbutton/magic-master/execution"
-	"github.com/magicbutton/magic-master/schemas"
-	"github.com/magicbutton/magic-master/utils"
+	"github.com/nexi-intra/nexi-meeting/execution"
+	"github.com/nexi-intra/nexi-meeting/schemas"
+	"github.com/nexi-intra/nexi-meeting/utils"
 )
 
 func UsecasesGetUserPost() usecase.Interactor {
@@ -27,12 +27,12 @@ func UsecasesGetUserPost() usecase.Interactor {
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input Request, output *schemas.User) error {
 
-		_, err := execution.ExecutePowerShell("john", "*", "magic-master", "05-usecases", "10-get-user.ps1", "", "-userid", input.Userid)
+		_, err := execution.ExecutePowerShell("john", "*", "nexi-meeting", "05-usecases", "10-get-user.ps1", "", "-userid", input.Userid)
 		if err != nil {
 			return err
 		}
 
-		resultingFile := path.Join(utils.WorkDir("magic-master"), "user.json")
+		resultingFile := path.Join(utils.WorkDir("nexi-meeting"), "user.json")
 		data, err := os.ReadFile(resultingFile)
 		if err != nil {
 			return err

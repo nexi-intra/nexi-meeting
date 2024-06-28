@@ -16,9 +16,9 @@ import (
 
 	"github.com/swaggest/usecase"
 
-	"github.com/magicbutton/magic-master/execution"
-	"github.com/magicbutton/magic-master/schemas"
-	"github.com/magicbutton/magic-master/utils"
+	"github.com/nexi-intra/nexi-meeting/execution"
+	"github.com/nexi-intra/nexi-meeting/schemas"
+	"github.com/nexi-intra/nexi-meeting/utils"
 )
 
 func AnalyseParseUsersPost() usecase.Interactor {
@@ -31,12 +31,12 @@ func AnalyseParseUsersPost() usecase.Interactor {
 			return inputErr
 		}
 
-		inputErr = os.WriteFile(path.Join(utils.WorkDir("magic-master"), "userssample.json"), body, 0644)
+		inputErr = os.WriteFile(path.Join(utils.WorkDir("nexi-meeting"), "userssample.json"), body, 0644)
 		if inputErr != nil {
 			return inputErr
 		}
 
-		_, err := execution.ExecutePowerShell("john", "*", "magic-master", "30-analyse", "10-parse-users.ps1", "")
+		_, err := execution.ExecutePowerShell("john", "*", "nexi-meeting", "30-analyse", "10-parse-users.ps1", "")
 		if err != nil {
 			return err
 		}
