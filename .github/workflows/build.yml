@@ -1,11 +1,11 @@
 # v1.0
 
-name: Canary Release
+name: Build Web
 
 on:
   push:
     branches:
-      - '**'
+      - "**"
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
