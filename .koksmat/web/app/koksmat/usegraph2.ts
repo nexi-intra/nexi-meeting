@@ -50,7 +50,7 @@ export function useGraph2<T>(url: string, scopes: string[], pages?: number) {
      */
     const load = async () => {
       seterror("");
-      debugger;
+
       try {
         let token = magicbox.authtoken;
         const calledTimestamp = new Date();

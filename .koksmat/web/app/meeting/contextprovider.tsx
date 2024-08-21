@@ -43,7 +43,7 @@ export const MeetingProvider = ({ children }: Props) => {
   };
 
   useEffect(() => {
-    console.log("Meeting context updated:", meetingContext);
+    //console.log("Meeting context updated:", meetingContext);
   }, [meetingContext]);
 
   return (

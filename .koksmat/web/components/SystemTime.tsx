@@ -10,7 +10,7 @@ export default function SystemTime() {
   const [minutesFromMidnight, setMinutesFromMidnight] = useState<number>(0);
   const { useFixeddate, now, version } = meetingContext;
   useEffect(() => {
-    console.log("Context updated in MyComponent:", version, useFixeddate, now);
+    //    console.log("Context updated in MyComponent:", version, useFixeddate, now);
   }, [version, useFixeddate, now]);
   return (
     <div>

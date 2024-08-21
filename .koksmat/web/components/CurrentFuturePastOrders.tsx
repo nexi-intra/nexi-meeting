@@ -307,7 +307,7 @@ export default function CurrentFuturePastOrders() {
         </TabsList>
         <TabsContent value="current" className="py-6">
           <div className="grid gap-4">
-            {todayAndTomorrow.result.map((event) => (
+            {todayAndTomorrow.result?.map((event) => (
               <EventItemCard
                 key={event.id}
                 event={event}
@@ -319,7 +319,7 @@ export default function CurrentFuturePastOrders() {
         <TabsContent value="future" className="py-6">
           <div className="grid gap-4">
             <div className="grid gap-4">
-              {next7days.result.map((event) => (
+              {next7days.result?.map((event) => (
                 <EventItemCard
                   key={event.id}
                   event={event}
@@ -332,7 +332,7 @@ export default function CurrentFuturePastOrders() {
         <TabsContent value="past" className="py-6">
           <div className="grid gap-4">
             <div className="grid gap-4">
-              {prev7days.result.map((event) => (
+              {prev7days.result?.map((event) => (
                 <EventItemCard
                   key={event.id}
                   event={event}

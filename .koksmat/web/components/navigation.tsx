@@ -55,8 +55,8 @@ export const leftRailApps: AppLeftRailProps = {
   bottomApps: [
     {
       icon: <Settings className="h-5 w-5" />,
-      title: "Settings",
-      href: "/settings",
+      title: "Admin",
+      href: `/${APPNAME}/admin`,
     },
   ],
 };
