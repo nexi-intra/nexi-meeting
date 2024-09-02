@@ -26,7 +26,12 @@ import {
 } from "@/components/ui/collapsible";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { useSQLSelect2 } from "@/app/koksmat/usesqlselect2";
-
+import { useSQLSelect3 } from "@/app/koksmat/usesqlselect3";
+export interface Result {
+  resource_id: string;
+  hour: number;
+  utilization_hours: number;
+}
 type HeatMapData = {
   room: string;
   "9AM": number;
@@ -56,37 +61,38 @@ export default function BookingUtilization() {
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
   const [isDateOpen, setIsDateOpen] = useState<boolean>(false);
-  const timeslots = useSQLSelect2(
-    "magic-mix",
+  const timeslots = useSQLSelect3(
+    "mix",
     `WITH bookings AS (
     SELECT 
         resource_id, 
         start_date, 
         end_date, 
         hour,
-        COUNT(*) * 0.25 AS booked_hours -- each record represents 15 minutes (0.25 hours)
+        0.25 AS booked_hours -- each record represents 15 minutes (0.25 hours)
     FROM 
         booking.utilization
     WHERE 
         resource_id ILIKE 'room-dk%'
-        
         AND hour > 7 AND hour < 17 
         --AND start_date >= '2024-01-01' AND end_date <= '2024-01-31'
-    GROUP BY 
-        resource_id, start_date, end_date, hour
 )
 SELECT 
     resource_id,
-    start_date,
-    hour,
+    --,start_date,
+   hour,
     SUM(booked_hours) AS utilization_hours
 FROM 
     bookings
 GROUP BY 
-    resource_id, start_date, hour
+    resource_id --, start_date, 
+    ,hour
 ORDER BY 
-    resource_id, start_date, hour
+    resource_id
+    --, start_date, 
+    ,hour
 --LIMIT 100;
+
 `
   );
 
@@ -210,8 +216,7 @@ ORDER BY
 
   return (
     <div className="container mx-auto p-4 space-y-8">
-      <h1 className="text-2xl font-bold mb-4">Meeting Room Utilization</h1>
-      {JSON.stringify(timeslots, null, 2)}
+      <h1 className="text-2xl font-bold mb-4">Meeting Room Utilization</h1>k
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <Label htmlFor="country">Country</Label>
@@ -269,7 +274,6 @@ ORDER BY
           </Select>
         </div>
       </div>
-
       <Collapsible open={isDateOpen} onOpenChange={setIsDateOpen}>
         <CollapsibleTrigger asChild>
           <Button variant="outline" className="w-full justify-between">
@@ -306,9 +310,7 @@ ORDER BY
           </div>
         </CollapsibleContent>
       </Collapsible>
-
       <Button>Apply Filters</Button>
-
       <Card>
         <CardHeader>
           <CardTitle>Room Utilization During Business Hours</CardTitle>
@@ -359,7 +361,6 @@ ORDER BY
           </div>
         </CardContent>
       </Card>
-
       <Card>
         <CardHeader>
           <CardTitle>Booking Details</CardTitle>

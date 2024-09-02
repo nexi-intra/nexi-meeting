@@ -1,0 +1,41 @@
+[
+  {
+    "id": 5,
+    "created_at": "2024-09-02T09:14:36.77557+00:00",
+    "created_by": "niels.johansen@nexigroup.com",
+    "updated_at": "2024-09-02T09:14:36.77557+00:00",
+    "updated_by": "niels.johansen@nexigroup.com",
+    "deleted_at": null,
+    "koksmat_masterdataref": null,
+    "koksmat_masterdata_id": null,
+    "koksmat_masterdata_etag": null,
+    "koksmat_compliancetag": null,
+    "koksmat_state": null,
+    "koksmat_bucket": null,
+    "tenant": "",
+    "searchindex": "",
+    "name": "table.public.country",
+    "description": "Holds a list of Countries which we support",
+    "data": {
+      "pipelines": {
+        "sync": [
+          {
+            "name": "input",
+            "type": "sql-select",
+            "source": "SELECT etag,\n fields ->> 'id'::text AS id,\n fields ->> 'Title'::text AS title,\n   fields ->> 'Flag'::text AS flag\n FROM sync.sharepoint_items('%cava3%'::text) sharepoint_items(id, etag, fields, listname)\n WHERE listname = 'Countries'::text;\n"
+          },
+          {
+            "name": "map",
+            "type": "sql-select",
+            "source": "SELECT etag,\n fields ->> 'id'::text AS id,\n fields ->> 'Title'::text AS title,\n   fields ->> 'Flag'::text AS flag\n FROM sync.sharepoint_items('%cava3%'::text) sharepoint_items(id, etag, fields, listname)\n WHERE listname = 'Countries'::text;\n"
+          },
+          {
+            "name": "output",
+            "type": "sql-select",
+            "source": "SELECT etag,\n fields ->> 'id'::text AS id,\n fields ->> 'Title'::text AS title,\n   fields ->> 'Flag'::text AS flag\n FROM sync.sharepoint_items('%cava3%'::text) sharepoint_items(id, etag, fields, listname)\n WHERE listname = 'Countries'::text;\n"
+          }
+        ]
+      }
+    }
+  }
+]

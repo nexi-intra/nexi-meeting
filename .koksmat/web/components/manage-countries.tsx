@@ -109,27 +109,29 @@ export default function ManageCountries() {
   };
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Organization Gallery</h1>
-      <div className="mb-4 flex gap-2">
-        <Input
-          placeholder="New country name"
-          value={newCountryName}
-          onChange={(e) => setNewCountryName(e.target.value)}
-        />
-        <Button onClick={handleAddCountry}>
-          <PlusIcon className="h-4 w-4 mr-2" />
-          Add Country
-        </Button>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {countries.map((country) => (
-          <CountryCard
-            key={country.id}
-            country={country}
-            onAddSite={handleAddSite}
+    <div>
+      <div className="p-4 max-w-4xl mx-auto">
+        <h1 className="text-2xl font-bold mb-4">Organization Gallery</h1>
+        <div className="mb-4 flex gap-2">
+          <Input
+            placeholder="New country name"
+            value={newCountryName}
+            onChange={(e) => setNewCountryName(e.target.value)}
           />
-        ))}
+          <Button onClick={handleAddCountry}>
+            <PlusIcon className="h-4 w-4 mr-2" />
+            Add Country
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {countries.map((country) => (
+            <CountryCard
+              key={country.id}
+              country={country}
+              onAddSite={handleAddSite}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
