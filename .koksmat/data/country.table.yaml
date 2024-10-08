@@ -17,25 +17,18 @@
   data:
     pipelines:
       sync:
-        - name: input
-          type: sql-select
-          source: >
-            SELECT etag,
-             fields ->> 'id'::text AS id,
-             fields ->> 'Title'::text AS title,
-               fields ->> 'Flag'::text AS flag
-             FROM sync.sharepoint_items('%cava3%'::text) sharepoint_items(id, etag, fields, listname)
-             WHERE listname = 'Countries'::text;
-        - name: map
-          type: sql-select
-          source: >
-            SELECT * FROM country
-        - name: output
-          type: sql-select
-          source: >
-            SELECT etag,
-             fields ->> 'id'::text AS id,
-             fields ->> 'Title'::text AS title,
-               fields ->> 'Flag'::text AS flag
-             FROM sync.sharepoint_items('%cava3%'::text) sharepoint_items(id, etag, fields, listname)
-             WHERE listname = 'Countries'::text;
+        source: >
+          SELECT 
+          fields ->> ' id' ::text AS id,
+          ' '  as tenant,
+          ' '  as searchindex, 
+          fields ->> ' id' ::text AS masterid,
+          fields ->> ' Title' ::text AS name,
+          ' '  as description, 
+          fields ->> ' Title' ::text AS code,
+          ' '  as currency, 
+          fields ->> ' Flag' ::text AS flag
+        table: country
+        create: create_country
+        update: update_country
+        delete: delete_country
