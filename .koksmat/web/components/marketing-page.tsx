@@ -44,7 +44,7 @@ export default function Component() {
             </p>
             <p className="text-gray-600">
               Reservation data enable you to manage office occupancy over time, optimizing work environments to meet
-              people's needs and to improve efficiency in the management and use of energy resources.
+              people&apos;s needs and to improve efficiency in the management and use of energy resources.
             </p>
           </div>
           <div className="md:w-1/2">
