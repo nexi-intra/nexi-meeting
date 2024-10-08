@@ -1,8 +1,9 @@
+import LandingPage from '@/components/landing-page'
 import MarketingPage from '@/components/marketing-page'
 import React from 'react'
 
 export default function Page() {
   return (
-    <div><MarketingPage /></div>
+    <div><LandingPage /></div>
   )
 }

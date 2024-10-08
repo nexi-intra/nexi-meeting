@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import Image from 'next/image'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,14 +25,18 @@ export default function RootLayout({
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container flex h-14 items-center">
             <div className="mr-4 hidden md:flex">
-              <Link className="mr-6 flex items-center space-x-2" href="/">
-                <span className="hidden font-bold sm:inline-block">CAVA2</span>
+
+              <Link className="flex items-center justify-center mr-4" href="#">
+                <Image
+                  src="/CAVA2.svg"
+                  alt="CAVA2 Logo"
+                  width={68}
+                  height={24}
+                  className="dark:invert"
+                />
+                <span className="sr-only">CAVA2</span>
               </Link>
-              <nav className="flex items-center space-x-6 text-sm font-medium">
-                <Link href="/features">Features</Link>
-                <Link href="/compliance">Compliance</Link>
-                <Link href="/privacy">Privacy</Link>
-              </nav>
+              <Links />
             </div>
             <Sheet>
               <SheetTrigger asChild>
@@ -41,14 +46,10 @@ export default function RootLayout({
                 </Button>
               </SheetTrigger>
               <SheetContent side="left">
-                <Link href="/" className="flex items-center">
+                <Link href="/about" className="flex items-center">
                   <span className="font-bold">CAVA2</span>
                 </Link>
-                <nav className="mt-6 flex flex-col space-y-4">
-                  <Link href="/features">Features</Link>
-                  <Link href="/compliance">Compliance</Link>
-                  <Link href="/privacy">Privacy</Link>
-                </nav>
+                <Links />
               </SheetContent>
             </Sheet>
             <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
@@ -71,4 +72,13 @@ export default function RootLayout({
       </body>
     </html>
   )
+}
+
+function Links() {
+  return <nav className=" lg:flex items-center space-x-6 text-sm font-medium">
+    <Link href="/about/features">Features</Link>
+    <Link href="/about/compliance">Compliance</Link>
+    <Link href="/about/privacy">Privacy</Link>
+    <Link href="/about/open-source">Open Source</Link>
+  </nav>
 }
