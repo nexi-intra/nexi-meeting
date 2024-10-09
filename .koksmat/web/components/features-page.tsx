@@ -100,7 +100,7 @@ export default function FeaturesPage() {
   }, [])
 
   return (
-    <div className="flex">
+    <div className="flex container">
       {/* Table of Contents */}
       <aside className="w-64 h-screen overflow-y-auto p-4 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <h2 className="text-lg font-semibold mb-4">Table of Contents</h2>
@@ -137,7 +137,7 @@ export default function FeaturesPage() {
 
       {/* Main Content */}
       <div className="flex-1 p-8">
-        <h1 className="text-4xl font-bold mb-8">CAVA2 Features</h1>
+        <h1 className="text-4xl font-bold mb-8  text-center">CAVA2 Features</h1>
 
         <section className="mb-12">
           <p className="text-lg mb-4">

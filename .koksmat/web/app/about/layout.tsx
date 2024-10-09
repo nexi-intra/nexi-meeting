@@ -1,3 +1,4 @@
+"use client"
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
@@ -6,19 +7,50 @@ import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import Image from 'next/image'
+import { useContext } from 'react'
+import { MagicboxContext } from '../koksmat/magicbox-context'
+import SignInComponent from '@/components/sign-in-component'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: 'CAVA2 - Revolutionizing Hybrid Workplaces',
-  description: 'Seamlessly manage your office space with Microsoft 365 integration',
-}
+// export const metadata: Metadata = {
+//   title: 'CAVA2 - Revolutionizing Hybrid Workplaces',
+//   description: 'Seamlessly manage your office space with Microsoft 365 integration',
+// }
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+
+  const magicbox = useContext(MagicboxContext);
+  if (!magicbox) {
+    return <div>no magicbox</div>;
+  }
+  if (!magicbox.user) {
+    return (
+      <div className="flex h-screen">
+        <div className="grow"></div>
+        <div className="flex flex-col">
+          <div className="grow"></div>
+          <div>
+            <SignInComponent handleLogin={async () => {
+
+              const signedIn = await magicbox.signIn(["User.Read"], "");
+
+              magicbox.refresh();
+            }}
+
+            />
+
+          </div>
+          <div className="grow"></div>
+        </div>
+        <div className="grow"></div>
+      </div>
+    );
+  }
   return (
     <html lang="en">
       <body className={inter.className}>
