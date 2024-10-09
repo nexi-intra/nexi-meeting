@@ -23,6 +23,7 @@ import {
   Users2,
   FileText,
   Calendar,
+  Info,
 } from "lucide-react";
 export const leftRailApps: AppLeftRailProps = {
   topApps: [
@@ -53,6 +54,12 @@ export const leftRailApps: AppLeftRailProps = {
     },
   ],
   bottomApps: [
+    {
+      icon: <Info className="h-5 w-5" />,
+      title: "About",
+      href: `/about`,
+    },
+
     {
       icon: <Settings className="h-5 w-5" />,
       title: "Admin",

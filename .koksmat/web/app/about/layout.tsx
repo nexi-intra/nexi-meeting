@@ -58,7 +58,7 @@ export default function RootLayout({
           <div className="container flex h-14 items-center">
             <div className="mr-4 hidden md:flex">
 
-              <Link className="flex items-center justify-center mr-4" href="#">
+              <Link className="flex items-center justify-center mr-4" href="/about">
                 <Image
                   src="/CAVA2.svg"
                   alt="CAVA2 Logo"
@@ -86,7 +86,9 @@ export default function RootLayout({
             </Sheet>
             <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
               <div className="w-full flex-1 md:w-auto md:flex-none">
-                <Button className="w-full md:w-auto">Get Started</Button>
+                <Link href="/meeting" target='_blank'>
+                  <Button className="w-full md:w-auto">Try</Button>
+                </Link>
               </div>
             </div>
           </div>

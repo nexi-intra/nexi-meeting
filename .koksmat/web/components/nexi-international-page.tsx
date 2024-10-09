@@ -11,7 +11,7 @@ export default function Component() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
+      {/* <header className="px-4 lg:px-6 h-14 flex items-center">
         <Link className="flex items-center justify-center" href="#">
           <MountainIcon className="h-6 w-6" />
           <span className="sr-only">CAVA2</span>
@@ -30,7 +30,7 @@ export default function Component() {
             Join Us
           </Link>
         </nav>
-      </header>
+      </header> */}
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-black text-white">
           <div className="container px-4 md:px-6">
@@ -48,10 +48,10 @@ export default function Component() {
                   <Button className="bg-white text-black hover:bg-gray-200">Join Our Team</Button>
                 </Link>
                 <Link href="#about">
-                  <Button variant="outline">Learn More</Button>
+                  <Button className=' text-black' variant="outline">Learn More</Button>
                 </Link>
               </div>
-              <p className="text-sm text-gray-400">An initiative of Nexi International ERG</p>
+              <p className="text-sm text-gray-400">An initiative of <Link target='_blank' href="https://christianiabpos.sharepoint.com/sites/nexiintra-home/SitePages/Multicultural-Diversity.aspx">Nexi International ERG</Link></p>
             </div>
           </div>
         </section>
