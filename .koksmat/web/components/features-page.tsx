@@ -6,6 +6,7 @@ import { Calendar, Users, BarChart, MapPin, Monitor, Coffee, ShieldCheck, Headph
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import NexiRoomManagementDemoOverlay from './nexi-room-management-demo-page'
 
 const features = [
   {
@@ -45,11 +46,19 @@ const features = [
     illustration: '/undraw_directions.svg',
   },
   {
+    id: 'guest-registration',
+    title: 'Guest Registration',
+    icon: Monitor,
+    description: 'Multiple interfaces for guest registration and management. Self service kiosk, via managed and unmanaged reception, mail',
+    illustration: '/undraw_helpful_sign.svg',
+  },
+  {
     id: 'room-signage',
     title: 'Room Signage',
     icon: Monitor,
     description: 'Digital signage solutions for clear room status and booking information.',
     illustration: '/undraw_helpful_sign.svg',
+    demo: <NexiRoomManagementDemoOverlay />,
   },
   {
     id: 'supporting-apps',
@@ -189,7 +198,8 @@ export default function FeaturesPage() {
                         </ul>
                       </div>
                     )}
-                    <Button className="mt-4">Learn More</Button>
+                    <Button className="mt-4 mr-4">Learn More</Button>
+                    {feature.demo}
                   </div>
                 </div>
               </CardContent>

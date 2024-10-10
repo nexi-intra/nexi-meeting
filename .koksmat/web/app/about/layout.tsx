@@ -111,6 +111,8 @@ export default function RootLayout({
 function Links() {
   return <nav className=" lg:flex items-center space-x-6 text-sm font-medium">
     <Link href="/about/features">Features</Link>
+    <Link href="/about/stakeholders">Stakeholders</Link>
+
     <Link href="/about/compliance">Compliance</Link>
     <Link href="/about/privacy">Privacy</Link>
     <Link href="/about/open-source">Open Source</Link>
